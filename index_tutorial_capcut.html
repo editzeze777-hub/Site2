@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Tá na Rede Edit</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#050505;color:#fff;font-family:Arial,Helvetica,sans-serif}.wrap{max-width:680px;margin:auto;min-height:100vh;background:linear-gradient(#111,#050505)}
+header{position:sticky;top:0;z-index:10;background:rgba(7,7,7,.96);backdrop-filter:blur(14px);padding:14px;border-bottom:1px solid #222}.brand{font-size:22px;font-weight:900}.brand i{color:#00e676;font-style:normal}.tabs{display:flex;gap:7px;margin-top:12px;overflow:auto}.tab{flex:1;min-width:105px;border:0;border-radius:15px;padding:13px 6px;background:#1b1b1b;color:#aaa;font-weight:900;font-size:11px;white-space:nowrap}.tab.active{background:#00e676;color:#061007}
+main{padding:15px}.panel{display:none}.panel.active{display:block}.card{background:#151515;border:1px solid #292929;border-radius:20px;padding:15px;margin-bottom:14px}h2{margin:7px 0;font-size:21px}p{color:#aaa;line-height:1.42;margin:7px 0 14px}.badge{display:inline-block;background:#222;color:#00e676;border-radius:9px;padding:5px 8px;font-size:10px;font-weight:900}.upload{display:block;border:2px dashed #343434;border-radius:17px;padding:20px;text-align:center;font-weight:900;background:#101010;color:#eee}input[type=file]{display:none}
+video,.photoCanvas{width:100%;max-height:58vh;object-fit:contain;border-radius:15px;background:#000;margin-top:12px}.hidden{display:none!important}.btn{border:0;border-radius:14px;padding:13px 14px;font-weight:900;background:#252525;color:#fff}.btn.primary{background:#00e676;color:#061007}.btn:disabled{opacity:.4}.actions{display:flex;gap:9px;margin-top:11px}.actions .btn{flex:1}.progress{height:10px;background:#292929;border-radius:20px;overflow:hidden;margin-top:13px}.bar{height:100%;width:0;background:#00e676;transition:.2s}.status{text-align:center;color:#aaa;font-size:12px;margin-top:9px;min-height:18px}.stats{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:11px}.stat{background:#101010;border-radius:14px;padding:11px;text-align:center}.stat b{display:block;font-size:18px}.stat span{font-size:10px;color:#888}.effects{display:grid;grid-template-columns:1fr 1fr;gap:9px}.effect{border:1px solid #333;background:#101010;color:#fff;border-radius:16px;padding:12px;text-align:left}.effect.sel{border-color:#00e676;box-shadow:inset 0 0 0 1px #00e67655}.effect b{display:block}.effect small{display:block;color:#888;margin-top:5px;line-height:1.25}.slider{margin-top:11px}.slider label{display:flex;justify-content:space-between;color:#aaa;font-size:12px}input[type=range]{width:100%;accent-color:#00e676}.log{max-height:130px;overflow:auto;background:#0b0b0b;border-radius:13px;padding:9px;font-size:11px;color:#888;white-space:pre-wrap}.clips-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.clip-card{background:#0e0e0e;border:1px solid #292929;border-radius:15px;padding:8px;overflow:hidden}.virtual-preview{position:relative}.clip-preview{width:100%;aspect-ratio:16/9;object-fit:cover;background:#000;border-radius:10px;display:block}.clip-time{position:absolute;left:6px;bottom:6px;background:rgba(0,0,0,.75);padding:3px 6px;border-radius:7px;font-size:9px;color:#fff}.clip-title{font-size:12px;font-weight:900;margin:8px 2px}.clip-download{display:block;width:100%;border:0;border-radius:10px;padding:10px 5px;background:#00e676;color:#061007;font-weight:900;font-size:11px}.clip-reverse{display:block;width:100%;border:0;border-radius:10px;padding:10px 5px;background:#9c27b0;color:#fff;font-weight:900;font-size:11px;margin-top:7px}.clip-download:disabled,.clip-reverse:disabled{opacity:.5}.notice{font-size:11px;color:#777;margin-top:10px;line-height:1.4}.danger{color:#ff9e9e}.modebox{background:#101010;border:1px solid #2b2b2b;border-radius:14px;padding:12px;font-size:12px;color:#aaa;line-height:1.45}.modebox b{color:#fff}.mini{font-size:10px;color:#777}
+
+.tutorial-grid{display:grid;grid-template-columns:1fr;gap:10px;margin-top:12px}
+.tutorial-item{background:#101010;border:1px solid #2d2d2d;border-radius:16px;padding:14px}
+.tutorial-item h3{margin:0 0 7px;font-size:16px}
+.tutorial-item p{margin:5px 0 9px}
+.tutorial-steps{margin:0;padding-left:19px;color:#bbb;font-size:12px;line-height:1.55}
+.tip{margin-top:10px;background:#171717;border-left:3px solid #00e676;border-radius:10px;padding:9px;color:#aaa;font-size:11px;line-height:1.45}
+.tag{display:inline-block;margin:0 4px 5px 0;padding:4px 7px;border-radius:8px;background:#202020;color:#00e676;font-size:9px;font-weight:900}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><div class="brand">Tá na Rede <i>Edit</i></div><div class="tabs">
+<button class="tab active" data-tab="clips">🎬 CORTAR CLIPES</button><button class="tab" data-tab="reverse">🔄 REVERSE CLIPS</button><button class="tab" data-tab="effects">✨ EFEITOS</button><button class="tab" data-tab="tutorials">📚 TUTORIAIS</button>
+</div></header>
+<main>
+<section id="clips" class="panel active"><div class="card">
+<span class="badge">⚡ MODO INSTANTÂNEO</span><h2>Separar em clipes de 1 segundo</h2><p>Os clipes aparecem sem renderizar o vídeo inteiro. O arquivo só é gerado quando você toca em <b>BAIXAR CLIP</b>.</p>
+<label class="upload">🎥 IMPORTAR DA GALERIA<input id="videoFile" type="file" accept="video/*"></label><div style="height:9px"></div><label class="upload">📂 ESCOLHER NOS ARQUIVOS<input id="videoFile2" type="file" accept="video/*"></label>
+<video id="video" controls playsinline class="hidden"></video><div class="stats"><div class="stat"><b id="duration">--</b><span>DURAÇÃO</span></div><div class="stat"><b id="clipCount">--</b><span>CLIPES</span></div></div>
+<button id="process" class="btn primary" style="width:100%;margin-top:11px" disabled>✂️ MOSTRAR CLIPES INSTANTÂNEOS</button><div class="progress"><div id="bar" class="bar"></div></div><div id="status" class="status">Aguardando vídeo.</div><div id="log" class="log hidden"></div><div id="clipsGrid" class="clips-grid hidden"></div>
+<div class="notice">Sem marca-d'água. Os cartões são virtuais; só o clipe que você baixar é exportado.</div></div></section>
+
+<section id="reverse" class="panel"><div class="card">
+<span class="badge">🔄 MOTION REVERSE AUTOMÁTICO</span><h2>Reversar clips</h2><p>O efeito fica assim: <b>1 segundo normal → 1 segundo voltando</b>. Cada cartão aparece na hora e só o cartão escolhido é renderizado.</p>
+<div class="modebox"><b>⚡ Como foi corrigido</b><br>O reverse não usa Worker, FFmpeg ou várias cópias do vídeo. Na exportação ele usa um único vídeo oculto + canvas + MediaRecorder. Isso evita a tela de erro do Chrome em celulares que não conseguem criar o Worker.</div>
+<div style="height:10px"></div><div id="reverseEmpty" class="status">Escolha um vídeo na aba 🎬 CORTAR CLIPES primeiro.</div><button id="reverseShow" class="btn primary" style="width:100%;margin-top:10px" disabled>🔄 MOSTRAR REVERSE CLIPS</button>
+<div class="progress"><div id="reverseBar" class="bar"></div></div><div id="reverseStatus" class="status"></div><div id="reverseGrid" class="clips-grid hidden"></div>
+<div class="notice">O botão de reverse exporta em <b>WebM</b> quando o Chrome não oferece gravação MP4 nativa. Isso é normal e evita travamento/erro. O vídeo original não é alterado.</div></div></section>
+
+<section id="effects" class="panel"><div class="card"><span class="badge">PRESETS DAS 3 REFERÊNCIAS</span><h2>Efeitos para fotos</h2><p>Escolha uma foto e aplique os estilos de referência.</p><label class="upload">🖼️ ESCOLHER FOTO<input id="photoFile" type="file" accept="image/*"></label></div>
+<div id="editor" class="card hidden"><canvas id="canvas" class="photoCanvas"></canvas><div class="effects" style="margin-top:11px"><button class="effect sel" data-preset="chroma"><b>⚡ CHROMA BLUR</b><small>RGB split + glow + blur.</small></button><button class="effect" data-preset="zoom"><b>🔥 ZOOM GLOW</b><small>Zoom + bordas suaves.</small></button><button class="effect" data-preset="sharp"><b>💥 RGB SHARP</b><small>RGB + contraste forte.</small></button></div><div class="slider"><label><span>Intensidade</span><b id="intVal">70%</b></label><input id="intensity" type="range" min="0" max="100" value="70"></div><div class="slider"><label><span>RGB / deslocamento</span><b id="rgbVal">9px</b></label><input id="rgb" type="range" min="0" max="25" value="9"></div><div class="actions"><button id="reset" class="btn">↺ ORIGINAL</button><button id="downloadPhoto" class="btn primary">⬇️ BAIXAR FOTO</button></div></div></section>
+
+<section id="tutorials" class="panel">
+  <div class="card">
+    <span class="badge">🎬 GUIA CAPCUT</span>
+    <h2>Biblioteca de efeitos para edits</h2>
+    <p>Passo a passo rápido para montar <b>shake, zoom, reverse, velocity, glow, RGB</b> e a famosa <b>Montagem Guerreiro</b> no CapCut pelo celular.</p>
+
+    <div class="tutorial-grid">
+      <div class="tutorial-item">
+        <span class="tag">SHAKE</span><span class="tag">IMPACTO</span>
+        <h3>💥 Shake forte</h3>
+        <ol class="tutorial-steps">
+          <li>Selecione o clipe e abra <b>Animação → Combo</b> ou use <b>keyframes</b>.</li>
+          <li>Nos pontos de batida, alterne posição alguns pixels para os lados e para cima/baixo.</li>
+          <li>Use rotação pequena, cerca de 2° a 5°, e aumente um pouco o zoom para não aparecer borda.</li>
+          <li>Deixe os movimentos bem rápidos, acompanhando a batida.</li>
+        </ol>
+        <div class="tip">🔥 Dica: combine shake + flash branco bem curto no impacto.</div>
+      </div>
+
+      <div class="tutorial-item">
+        <span class="tag">ZOOM</span><span class="tag">GLOW</span>
+        <h3>🔍 Zoom + Glow</h3>
+        <ol class="tutorial-steps">
+          <li>Coloque um keyframe no começo do impacto com escala normal.</li>
+          <li>Avance poucos frames e aumente a escala para criar o soco visual.</li>
+          <li>Adicione <b>Efeitos → Desfoque/Glow</b> com intensidade moderada.</li>
+          <li>Volte rapidamente para a escala original.</li>
+        </ol>
+        <div class="tip">⚡ Quanto menor o intervalo entre os keyframes, mais agressivo fica o zoom.</div>
+      </div>
+
+      <div class="tutorial-item">
+        <span class="tag">REVERSE</span><span class="tag">LOOP</span>
+        <h3>🔄 Reverse de 1 segundo</h3>
+        <ol class="tutorial-steps">
+          <li>Corte exatamente o trecho que quer usar.</li>
+          <li>Duplique o trecho.</li>
+          <li>No segundo trecho, use <b>Editar → Reverter</b>.</li>
+          <li>Junte: <b>normal → reverso</b>. Para um loop, repita a sequência.</li>
+        </ol>
+        <div class="tip">🎯 Para ficar perfeito, corte em um movimento claro ou em uma batida da música.</div>
+      </div>
+
+      <div class="tutorial-item">
+        <span class="tag">VELOCITY</span><span class="tag">AMV</span>
+        <h3>⚡ Velocity / Speed Ramp</h3>
+        <ol class="tutorial-steps">
+          <li>Abra <b>Velocidade → Curva → Personalizar</b>.</li>
+          <li>Deixe a entrada mais lenta, acelere no impacto e desacelere na saída.</li>
+          <li>Use vários pontos para formar uma curva suave.</li>
+          <li>Sincronize o pico da velocidade com a batida.</li>
+        </ol>
+        <div class="tip">🎵 Uma música com batidas bem marcadas deixa o velocity muito mais bonito.</div>
+      </div>
+
+      <div class="tutorial-item">
+        <span class="tag">RGB</span><span class="tag">CHROMA</span>
+        <h3>🌈 RGB Split / Chroma</h3>
+        <ol class="tutorial-steps">
+          <li>Duplique o clipe ou use um efeito RGB do CapCut.</li>
+          <li>Desloque levemente as camadas/canais para criar a separação de cores.</li>
+          <li>Use o efeito apenas nos impactos para não poluir o edit.</li>
+          <li>Combine com shake e blur por poucos frames.</li>
+        </ol>
+        <div class="tip">💎 Pouca intensidade costuma parecer mais profissional que RGB exagerado.</div>
+      </div>
+
+      <div class="tutorial-item">
+        <span class="tag">GUERREIRO</span><span class="tag">MONTAGEM</span>
+        <h3>⚔️ Montagem Guerreiro</h3>
+        <ol class="tutorial-steps">
+          <li>Separe os melhores momentos do personagem em cortes curtos.</li>
+          <li>Sincronize cada corte com as batidas mais fortes.</li>
+          <li>Use <b>zoom + shake + flash + blur</b> nos impactos.</li>
+          <li>Intercale cenas rápidas com um reverse curto para dar sensação de combo.</li>
+          <li>Finalize com um impacto forte, texto ou transição sincronizada.</li>
+        </ol>
+        <div class="tip">🔥 Fórmula rápida: <b>corte → zoom → shake → flash → reverse → próximo corte</b>.</div>
+      </div>
+
+      <div class="tutorial-item">
+        <span class="tag">FLASH</span><span class="tag">IMPACTO</span>
+        <h3>✨ Flash branco de impacto</h3>
+        <ol class="tutorial-steps">
+          <li>Adicione uma imagem/fundo branco sobre o ponto da batida.</li>
+          <li>Deixe o flash extremamente curto, por poucos frames.</li>
+          <li>Use opacidade alta no primeiro frame e reduza rapidamente.</li>
+          <li>Combine com shake para dar mais força ao impacto.</li>
+        </ol>
+      </div>
+
+      <div class="tutorial-item">
+        <span class="tag">COMBO</span><span class="tag">BER STYLE</span>
+        <h3>🔥 Combo insano para AMV/Velocity</h3>
+        <ol class="tutorial-steps">
+          <li><b>Antes da batida:</b> zoom leve e blur.</li>
+          <li><b>Na batida:</b> shake + flash + RGB.</li>
+          <li><b>Logo depois:</b> reverse curtinho ou desaceleração.</li>
+          <li><b>Saída:</b> volta para o movimento normal e prepara o próximo corte.</li>
+        </ol>
+        <div class="tip">🚀 Não use todos os efeitos o tempo todo. Guarde os mais fortes para as batidas principais.</div>
+      </div>
+    </div>
+  </div>
+</section>
+</main></div>
+
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+const tabs=document.querySelectorAll('.tab');
+let selectedVideo=null,videoURL=null,duration=0,busy=false;
+let photoURL=null;
+
+function safeText(el,msg){ if(el) el.textContent=msg; }
+function showError(msg, target='status'){
+  const el=$(target)||$('status');
+  el.textContent='❌ '+msg;
+  el.classList.add('danger');
+  setTimeout(()=>el.classList.remove('danger'),1200);
+}
+window.addEventListener('error',e=>{
+  console.error(e.error||e.message);
+  if(!busy) showError('Ocorreu um erro, mas a página continua funcionando. Tente novamente.');
+});
+window.addEventListener('unhandledrejection',e=>{
+  console.error(e.reason);
+  e.preventDefault();
+  if(!busy) showError('O navegador bloqueou uma operação. Tente novamente.');
+});
+
+tabs.forEach(t=>t.addEventListener('click',()=>{
+  tabs.forEach(x=>x.classList.remove('active')); t.classList.add('active');
+  document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
+  $(t.dataset.tab).classList.add('active');
+}));
+
+function setStatus(s){safeText($('status'),s)}
+function revokeVideoURL(){if(videoURL){URL.revokeObjectURL(videoURL);videoURL=null}}
+function resetGrids(){
+  $('clipsGrid').innerHTML=''; $('clipsGrid').classList.add('hidden');
+  $('reverseGrid').innerHTML=''; $('reverseGrid').classList.add('hidden');
+  $('bar').style.width='0'; $('reverseBar').style.width='0';
+  $('process').textContent='✂️ MOSTRAR CLIPES INSTANTÂNEOS';
+  $('reverseShow').textContent='🔄 MOSTRAR REVERSE CLIPS';
+}
+function chooseVideo(f){
+  if(!f || !f.type.startsWith('video/')) return showError('Escolha um arquivo de vídeo.');
+  selectedVideo=f; revokeVideoURL(); videoURL=URL.createObjectURL(f); resetGrids();
+  const v=$('video'); v.pause(); v.src=''; v.load(); v.src=videoURL; v.classList.remove('hidden');
+  setStatus('Carregando vídeo...'); $('process').disabled=true; $('reverseShow').disabled=true;
+  $('reverseEmpty').textContent='Carregando vídeo...';
+  const ready=()=>{
+    duration=Number.isFinite(v.duration)?Math.max(0,v.duration):0;
+    $('duration').textContent=Math.ceil(duration)+'s'; $('clipCount').textContent=Math.ceil(duration);
+    $('process').disabled=duration<=0; $('reverseShow').disabled=duration<=0;
+    setStatus(duration>0?'Pronto.':'Não foi possível ler a duração.');
+    $('reverseEmpty').textContent=duration>0?'Vídeo pronto. Toque para criar a lista de Reverse Clips.':'Não foi possível abrir este vídeo.';
+  };
+  v.onloadedmetadata=ready; v.onerror=()=>showError('Não foi possível abrir este vídeo.','status');
+}
+$('videoFile').addEventListener('change',e=>chooseVideo(e.target.files[0]));
+$('videoFile2').addEventListener('change',e=>chooseVideo(e.target.files[0]));
+
+function formatTime(t){const sec=Math.max(0,Math.floor(t));return `${String(Math.floor(sec/60)).padStart(2,'0')}:${String(sec%60).padStart(2,'0')}`}
+function makePreviewCard(index, reverse=false){
+  const start=index, end=Math.min(index+1,duration), card=document.createElement('div'); card.className='clip-card';
+  card.innerHTML=`<div class="virtual-preview"><video class="clip-preview" playsinline preload="metadata" muted></video><div class="clip-time">${formatTime(start)} – ${formatTime(end)}</div></div><div class="clip-title">${reverse?'Reverse Clip':'Clipe'} ${String(index+1).padStart(2,'0')}</div>${reverse?'<button class="clip-reverse">🔄 MOTION REVERSE + BAIXAR</button>':'<button class="clip-download">⬇️ BAIXAR CLIP</button>'}`;
+  const pv=card.querySelector('.clip-preview');
+  // NÃO carrega o vídeo em cada cartão: isso era o principal motivo da demora em vídeos longos.
+  pv.poster=''; pv.removeAttribute('src'); pv.controls=false;
+  pv.style.background='linear-gradient(135deg,#111,#222)';
+  pv.setAttribute('aria-label',`Prévia do ${reverse?'Reverse Clip':'Clipe'} ${index+1}`);
+  const label=document.createElement('div'); label.textContent=reverse?'↔️ MOTION REVERSE':'▶️ TOCAR'; label.style.cssText='position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#fff;pointer-events:none;text-shadow:0 2px 8px #000';
+  card.querySelector('.virtual-preview').appendChild(label);
+  pv.addEventListener('click',()=>previewSegment(start,end));
+  if(reverse) card.querySelector('.clip-reverse').addEventListener('click',()=>exportMotionReverse(start,end,index+1,card));
+  else card.querySelector('.clip-download').addEventListener('click',()=>exportForwardClip(start,end,index+1,card));
+  return card;
+}
+async function previewSegment(start,end){
+  const v=$('video'); if(!v||!duration)return;
+  try{
+    v.currentTime=Math.min(start,Math.max(0,duration-0.001));
+    await v.play();
+    const stop=()=>{if(v.currentTime>=end-0.03){v.pause();v.removeEventListener('timeupdate',stop)}};
+    v.addEventListener('timeupdate',stop);
+  }catch(e){showError('Não foi possível reproduzir a prévia.','status')}
+}
+
+function renderGrid(grid,reverse){
+  grid.innerHTML=''; grid.classList.remove('hidden');
+  const frag=document.createDocumentFragment(),count=Math.ceil(duration);
+  for(let i=0;i<count;i++) frag.appendChild(makePreviewCard(i,reverse));
+  grid.appendChild(frag); return count;
+}
+$('process').addEventListener('click',()=>{
+  if(!selectedVideo||duration<=0)return;
+  const count=renderGrid($('clipsGrid'),false); $('bar').style.width='100%';
+  setStatus(`⚡ ${count} clipes prontos. Nenhum vídeo foi renderizado ainda.`); $('process').textContent='⚡ CLIPES PRONTOS — BAIXE QUANDO QUISER';
+});
+$('reverseShow').addEventListener('click',()=>{
+  if(!selectedVideo||duration<=0)return;
+  const count=renderGrid($('reverseGrid'),true); $('reverseBar').style.width='100%';
+  safeText($('reverseStatus'),`⚡ ${count} Reverse Clips prontos. Escolha qualquer um.`); $('reverseShow').textContent='⚡ REVERSE CLIPS PRONTOS';
+});
+
+function supportedMime(){
+  if(!window.MediaRecorder)return '';
+  for(const m of ['video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm']){try{if(MediaRecorder.isTypeSupported(m))return m}catch{}}
+  return '';
+}
+function wait(ms){return new Promise(r=>setTimeout(r,ms))}
+function seek(video,time,timeout=3500){
+  return new Promise((resolve,reject)=>{
+    let done=false; const timer=setTimeout(()=>finish(false,new Error('Tempo limite ao buscar o trecho.')),timeout);
+    const cleanup=()=>{clearTimeout(timer);video.removeEventListener('seeked',ok);video.removeEventListener('error',bad)};
+    const finish=(good,err)=>{if(done)return;done=true;cleanup();good?resolve():reject(err)};
+    const ok=()=>finish(true); const bad=()=>finish(false,new Error('Falha ao buscar o trecho do vídeo.'));
+    video.addEventListener('seeked',ok,{once:true}); video.addEventListener('error',bad,{once:true});
+    try{video.currentTime=Math.max(0,Math.min(time,Math.max(0,video.duration-0.001)))}catch(e){finish(false,e)}
+  });
+}
+async function prepareHiddenVideo(){
+  const v=$('video');
+  if(!v||!videoURL||!duration) throw new Error('Nenhum vídeo selecionado.');
+  if(v.readyState<1){
+    await new Promise((resolve,reject)=>{
+      const timer=setTimeout(()=>reject(new Error('O vídeo demorou demais para abrir.')),5000);
+      const ok=()=>{clearTimeout(timer);v.removeEventListener('loadedmetadata',ok);v.removeEventListener('error',bad);resolve()};
+      const bad=()=>{clearTimeout(timer);v.removeEventListener('loadedmetadata',ok);v.removeEventListener('error',bad);reject(new Error('Não foi possível abrir o vídeo.'))};
+      v.addEventListener('loadedmetadata',ok,{once:true}); v.addEventListener('error',bad,{once:true});
+    });
+  }
+  return v;
+}
+async function recordCanvasSequence(v,start,end,reverse,progress){
+  if(!HTMLCanvasElement.prototype.captureStream) throw new Error('Seu Chrome não suporta exportação por canvas.');
+  if(!window.MediaRecorder) throw new Error('Seu Chrome não suporta exportação de vídeo.');
+  const w=v.videoWidth||720,h=v.videoHeight||405,scale=Math.min(1,1280/Math.max(w,h));
+  const c=document.createElement('canvas'); c.width=Math.max(2,Math.round(w*scale)); c.height=Math.max(2,Math.round(h*scale));
+  const cx=c.getContext('2d',{alpha:false}); if(!cx)throw new Error('Não foi possível criar o renderizador.');
+  c.style.cssText='position:fixed;width:1px;height:1px;left:-30px;top:-30px;opacity:0'; document.body.appendChild(c);
+  const stream=c.captureStream(30),mime=supportedMime();
+  let rec; try{rec=mime?new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:4500000}):new MediaRecorder(stream)}catch(e){stream.getTracks().forEach(t=>t.stop());c.remove();throw new Error('O Chrome recusou o gravador.');}
+  const chunks=[]; rec.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data)};
+  const stopped=new Promise((resolve,reject)=>{rec.onstop=resolve;rec.onerror=e=>reject(e.error||e)});
+  const draw=()=>{try{cx.drawImage(v,0,0,c.width,c.height)}catch{}};
+  try{
+    if(!reverse){
+      await seek(v,start,2500);
+      rec.start(120);
+      const t0=performance.now(),len=Math.max(0.05,end-start);
+      await new Promise((resolve,reject)=>{
+        let raf=0;
+        const loop=()=>{
+          if(v.readyState>=2)draw();
+          const p=Math.min(1,(performance.now()-t0)/(len*1000)); progress(Math.round(p*96));
+          if(v.currentTime>=end-0.015 || performance.now()-t0>=len*1000+150){v.pause();cancelAnimationFrame(raf);resolve();return}
+          raf=requestAnimationFrame(loop);
+        };
+        const onerr=()=>{cancelAnimationFrame(raf);reject(new Error('Falha ao reproduzir o trecho.'))};
+        v.addEventListener('error',onerr,{once:true});
+        v.play().then(()=>{raf=requestAnimationFrame(loop)}).catch(onerr);
+      });
+    } else {
+      // MOTION REVERSE: UM ÚNICO ARQUIVO DE 2s = 1s normal + 1s reverso.
+      // Capturamos os frames do segundo escolhido uma vez e reutilizamos os mesmos frames nos dois sentidos.
+      const frames=[];
+      await seek(v,start,2500);
+      const fps=30, framesN=Math.max(15,Math.min(30,Math.round((end-start)*fps)));
+      for(let i=0;i<framesN;i++){
+        const t=start+(end-start)*(i/Math.max(1,framesN-1));
+        await seek(v,Math.min(end-0.003,t),2500);
+        draw();
+        frames.push(await createImageBitmap(c));
+        progress(Math.round(i/framesN*25));
+      }
+      // O gravador começa somente depois que todos os frames estão prontos.
+      // Assim o arquivo final é contínuo: normal (1s) + reverso (1s).
+      rec.start(120);
+      const renderFrames=async(list,base,span)=>{
+        for(let i=0;i<list.length;i++){
+          cx.clearRect(0,0,c.width,c.height);
+          cx.drawImage(list[i],0,0,c.width,c.height);
+          progress(base+Math.round(i/list.length*span));
+          await wait(1000/fps);
+        }
+      };
+      await renderFrames(frames,25,37);
+      await renderFrames(frames.slice().reverse(),62,37);
+      frames.forEach(f=>{try{f.close()}catch{}});
+    }
+    await wait(120); rec.stop(); await stopped; progress(100);
+  }catch(e){try{if(rec.state!=='inactive')rec.stop()}catch{};try{await stopped}catch{};stream.getTracks().forEach(t=>t.stop());c.remove();throw e}
+  stream.getTracks().forEach(t=>t.stop()); c.remove();
+  return new Blob(chunks,{type:rec.mimeType||mime||'video/webm'});
+}
+function downloadBlob(blob,name){
+  if(!blob||!blob.size)throw new Error('O arquivo exportado ficou vazio.');
+  const url=URL.createObjectURL(blob),a=document.createElement('a'); a.href=url; a.download=name; a.rel='noopener'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(url),60000);
+}
+async function exportMotionReverse(start,end,n,card){
+  if(busy)return; busy=true; const btn=card.querySelector('.clip-reverse');btn.disabled=true;btn.textContent='⏳ RENDERIZANDO...'; safeText($('reverseStatus'),`Gerando Motion Reverse do Clip ${String(n).padStart(2,'0')}...`); $('reverseBar').style.width='0%'; let v=null;
+  try{v=await prepareHiddenVideo();const blob=await recordCanvasSequence(v,start,end,true,p=>$('reverseBar').style.width=p+'%');downloadBlob(blob,`tanarede-motion-reverse-${String(n).padStart(2,'0')}-2s.webm`);$('reverseBar').style.width='100%';safeText($('reverseStatus'),`✅ Motion Reverse ${String(n).padStart(2,'0')} pronto.`)}
+  catch(e){if(v)v.remove();showError(String(e.message||e),'reverseStatus')}
+  finally{busy=false;btn.disabled=false;btn.textContent='🔄 MOTION REVERSE + BAIXAR'}
+}
+async function exportForwardClip(start,end,n,card){
+  if(busy)return; busy=true; const btn=card.querySelector('.clip-download');btn.disabled=true;btn.textContent='⏳ GERANDO...';setStatus(`Gerando Clipe ${String(n).padStart(2,'0')}...`);let v=null;
+  try{v=await prepareHiddenVideo();const blob=await recordCanvasSequence(v,start,end,false,p=>$('bar').style.width=p+'%');downloadBlob(blob,`tanarede-clipe-${String(n).padStart(2,'0')}.webm`);$('bar').style.width='100%';setStatus(`✅ Clipe ${String(n).padStart(2,'0')} pronto.`)}
+  catch(e){if(v)v.remove();showError(String(e.message||e),'status')}
+  finally{busy=false;btn.disabled=false;btn.textContent='⬇️ BAIXAR CLIP'}
+}
+
+// EFEITOS — isolado e com validação para não derrubar a página
+const canvas=$('canvas'),ctx=canvas.getContext('2d',{alpha:true});let img=new Image(),preset='chroma',imgReady=false;
+$('photoFile').addEventListener('change',e=>{
+  const f=e.target.files[0]; if(!f)return; if(!f.type.startsWith('image/'))return showError('Escolha uma imagem.');
+  if(photoURL)URL.revokeObjectURL(photoURL); photoURL=URL.createObjectURL(f); imgReady=false;
+  img.onload=()=>{imgReady=true;$('editor').classList.remove('hidden');draw()}; img.onerror=()=>showError('Não foi possível abrir a foto.','status'); img.src=photoURL;
+});
+document.querySelectorAll('.effect').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.effect').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');preset=b.dataset.preset;draw()}));
+$('intensity').addEventListener('input',e=>{$('intVal').textContent=e.target.value+'%';draw()});
+$('rgb').addEventListener('input',e=>{$('rgbVal').textContent=e.target.value+'px';draw()});
+function setup(){if(!imgReady||!img.naturalWidth||!img.naturalHeight)return false;const m=1200,s=Math.min(1,m/Math.max(img.naturalWidth,img.naturalHeight));canvas.width=Math.max(1,Math.round(img.naturalWidth*s));canvas.height=Math.max(1,Math.round(img.naturalHeight*s));return true}
+function vignette(a){const g=ctx.createRadialGradient(canvas.width/2,canvas.height/2,Math.min(canvas.width,canvas.height)*.22,canvas.width/2,canvas.height/2,Math.max(canvas.width,canvas.height)*.75);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,'+a+')');ctx.fillStyle=g;ctx.fillRect(0,0,canvas.width,canvas.height)}
+function draw(){if(!setup())return;try{ctx.filter='none';ctx.globalAlpha=1;ctx.globalCompositeOperation='source-over';ctx.drawImage(img,0,0,canvas.width,canvas.height);const I=+$('intensity').value/100,R=+$('rgb').value*I;
+ if(preset==='chroma'){ctx.globalAlpha=.5*I;ctx.globalCompositeOperation='screen';ctx.filter='blur(2px)';ctx.drawImage(img,-R,0,canvas.width,canvas.height);ctx.drawImage(img,R,0,canvas.width,canvas.height);ctx.filter='none';ctx.globalAlpha=1;ctx.globalCompositeOperation='source-over';vignette(.75)}
+ else if(preset==='zoom'){const z=1+.1*I,w=canvas.width*z,h=canvas.height*z;ctx.globalAlpha=.35*I;ctx.filter='blur('+4*I+'px)';ctx.drawImage(img,(canvas.width-w)/2,(canvas.height-h)/2,w,h);ctx.filter='none';ctx.globalAlpha=1;ctx.drawImage(img,(canvas.width-w*.96)/2,(canvas.height-h*.96)/2,w*.96,h*.96);vignette(.7)}
+ else{ctx.globalAlpha=.65*I;ctx.globalCompositeOperation='screen';ctx.drawImage(img,-R,0,canvas.width,canvas.height);ctx.drawImage(img,R,0,canvas.width,canvas.height);ctx.globalAlpha=1;ctx.globalCompositeOperation='source-over';ctx.filter='contrast('+(1+.65*I)+') saturate('+(1+.25*I)+')';ctx.drawImage(img,0,0,canvas.width,canvas.height);ctx.filter='none';vignette(.65)}
+ }catch(e){console.error(e);showError('Não foi possível aplicar este efeito.','status')}}
+$('reset').addEventListener('click',()=>{if(!imgReady)return;setup();ctx.filter='none';ctx.globalAlpha=1;ctx.globalCompositeOperation='source-over';ctx.drawImage(img,0,0,canvas.width,canvas.height)});
+$('downloadPhoto').addEventListener('click',()=>{try{if(!imgReady||!canvas.width||!canvas.height)throw new Error('Escolha uma foto primeiro.');canvas.toBlob(b=>{try{downloadBlob(b,'tanarede-efeito.jpg')}catch(e){showError(e.message,'status')}},'image/jpeg',.95)}catch(e){showError(e.message,'status')}});
+window.addEventListener('beforeunload',()=>{revokeVideoURL();if(photoURL)URL.revokeObjectURL(photoURL)});
+</script></body></html>
